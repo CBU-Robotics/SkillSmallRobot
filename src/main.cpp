@@ -18,7 +18,7 @@ const int RIGHT_BACK_WHEEL_PORT = 13;
 const int LEFT_INTAKE_MOTOR_PORT = 10;
 const int RIGHT_INTAKE_MOTOR_PORT = 2;
 
-const int IMU_PORT = 8; // Inertial Measurement Unit
+const int IMU_PORT = 3; // Inertial Measurement Unit
 
 // Note: If motors have r10 board,
 // do not go above 10,000mV and switch directions.
@@ -144,14 +144,19 @@ void punchIt() {
 
 void unPunchIt() {
 	turn(3000, 5); // Left shift adjust
-	move(-5000, 3);
+	move(-1000, 2);
 	piston.set_value(false);
 	// intake_group.move_relative(100, 200);
 }
 
 void disabled() {}
 
-void competition_initialize() {}
+void competition_initialize() {
+	intake_group.move_absolute(0, 100); // Moves 100 units forward
+	while (!((intake_group.get_positions().at(0) < 5) && (intake_group.get_positions().at(0) > -5))) {
+		pros::delay(5);
+	}
+}
 
 void autonomous() {
 	/**
@@ -160,17 +165,49 @@ void autonomous() {
 	 * Real dimensions are 14.5 x 13 inches.
 	 */
 	
-	move(-5000, 39);
-	turn(3000, -87.5);
-	move(5000, 55);
-	turn(3000, -90);
-	intake_group.move_voltage(-12000);
+	// move(-5000, 40);
+	// turn(3000, -85);
+	// move(-5000, 6);
+	// move(5000, 67);
+	// turn(3000, -90);
 
-	for (int i = 0; i < 11; i++) {
-		punchIt(); //3000ms
-		unPunchIt();
-		pros::delay(5000);
-	}
+	// 100 Is Horizontal
+	intake_group.move_relative(90, 100); // Moves 100 units forward
+	// while (!((intake_group.get_positions().at(0) < 95) && (intake_group.get_positions().at(0) > 90))) {
+	// 	pros::delay(5);
+	// }
+
+	pros::delay(1000);
+	piston.set_value(false);
+
+	move(-1000, 5);
+
+	left_group.move_voltage(10000);
+	right_group.move_voltage(10000);
+	pros::delay(1000);
+	left_group.brake();
+	right_group.brake();
+	
+	piston.set_value(true);
+
+	//180 is vertical
+	intake_group.move_relative(-90, 100); // Moves 100 units forward
+	// while (!((intake_group.get_positions().at(0) < 95) && (intake_group.get_positions().at(0) > 85))) {
+	// 	pros::delay(5);
+	// }
+
+	pros::delay(1000);
+
+	intake_group.move_relative(90, 100); // Moves 100 units forward
+	// while (!((intake_group.get_positions().at(0) < 95) && (intake_group.get_positions().at(0) > 90))) {
+	// 	pros::delay(5);
+	// }
+
+	// for (int i = 0; i < 11; i++) {
+	// 	punchIt(); //3000ms
+	// 	unPunchIt();
+	// 	pros::delay(1000);
+	// }
 }
 
 void opcontrol() {
