@@ -177,17 +177,17 @@ void autonomous() {
 	// 	pros::delay(5);
 	// }
 
-	pros::delay(1000);
+	pros::delay(500);
 	piston.set_value(false);
 
-	move(-1000, 5);
+	move(-2000, 5);
 
 	left_group.move_voltage(10000);
 	right_group.move_voltage(10000);
-	pros::delay(1000);
+	pros::delay(500);
 	left_group.brake();
 	right_group.brake();
-	
+
 	piston.set_value(true);
 
 	//180 is vertical
@@ -196,7 +196,7 @@ void autonomous() {
 	// 	pros::delay(5);
 	// }
 
-	pros::delay(1000);
+	pros::delay(500);
 
 	intake_group.move_relative(90, 100); // Moves 100 units forward
 	// while (!((intake_group.get_positions().at(0) < 95) && (intake_group.get_positions().at(0) > 90))) {
