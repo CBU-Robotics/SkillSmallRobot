@@ -165,11 +165,11 @@ void autonomous() {
 	 * Real dimensions are 14.5 x 13 inches.
 	 */
 	
-	// move(-5000, 40);
-	// turn(3000, -85);
-	// move(-5000, 6);
-	// move(5000, 67);
-	// turn(3000, -90);
+	move(-5000, 40);
+	turn(3000, -85);
+	move(-5000, 6);
+	move(5000, 67);
+	turn(3000, -90);
 
 	// 100 Is Horizontal
 	intake_group.move_relative(90, 100); // Moves 100 units forward
