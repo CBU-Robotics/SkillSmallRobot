@@ -115,7 +115,7 @@ void turn(int voltage, double rotation) {
 
 void initialize() {
 	//pros::lcd::initialize();
-	pros::ADIDigitalOut piston ('A', true);
+	pros::ADIDigitalOut piston ('A', false);
 	left_group.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
 	right_group.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
 }
@@ -149,6 +149,29 @@ void unPunchIt() {
 	// intake_group.move_relative(100, 200);
 }
 
+void pushPull() {
+	intake_group.move_relative(90, 100);
+
+	pros::delay(500);
+	piston.set_value(false);
+
+	move(-2000, 5);
+
+	left_group.move_voltage(10000);
+	right_group.move_voltage(10000);
+	pros::delay(500);
+	left_group.brake();
+	right_group.brake();
+
+	piston.set_value(true);
+
+	intake_group.move_relative(-90, 100);
+
+	pros::delay(500);
+
+	intake_group.move_relative(90, 100);
+}
+
 void disabled() {}
 
 void competition_initialize() {
@@ -165,49 +188,20 @@ void autonomous() {
 	 * Real dimensions are 14.5 x 13 inches.
 	 */
 	
-	// move(-5000, 40);
-	// turn(3000, -85);
-	// move(-5000, 6);
-	// move(5000, 67);
-	// turn(3000, -90);
-
-	// 100 Is Horizontal
-	intake_group.move_relative(90, 100); // Moves 100 units forward
-	// while (!((intake_group.get_positions().at(0) < 95) && (intake_group.get_positions().at(0) > 90))) {
-	// 	pros::delay(5);
-	// }
-
-	pros::delay(500);
-	piston.set_value(false);
-
-	move(-2000, 5);
-
-	left_group.move_voltage(10000);
-	right_group.move_voltage(10000);
+	move(-5000, 40);
+	turn(3000, -85);
+	left_group.move_voltage(5000);
+	right_group.move_voltage(5000);
 	pros::delay(500);
 	left_group.brake();
 	right_group.brake();
+	move(5000, 70);
+	turn(3000, -90);
 
 	piston.set_value(true);
-
-	//180 is vertical
-	intake_group.move_relative(-90, 100); // Moves 100 units forward
-	// while (!((intake_group.get_positions().at(0) < 95) && (intake_group.get_positions().at(0) > 85))) {
-	// 	pros::delay(5);
-	// }
-
-	pros::delay(500);
-
-	intake_group.move_relative(90, 100); // Moves 100 units forward
-	// while (!((intake_group.get_positions().at(0) < 95) && (intake_group.get_positions().at(0) > 90))) {
-	// 	pros::delay(5);
-	// }
-
-	// for (int i = 0; i < 11; i++) {
-	// 	punchIt(); //3000ms
-	// 	unPunchIt();
-	// 	pros::delay(1000);
-	// }
+	for (int i = 0; i < 11; i++) {
+		pushPull();
+	}
 }
 
 void opcontrol() {
