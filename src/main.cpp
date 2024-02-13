@@ -150,10 +150,10 @@ void unPunchIt() {
 }
 
 void pushPull() {
-	intake_group.move_relative(90, 100);
+	intake_group.move_relative(-990, 100);
 
 	pros::delay(500);
-	piston.set_value(false);
+	piston.set_value(false); //punch
 
 	move(-2000, 5);
 
@@ -163,13 +163,13 @@ void pushPull() {
 	left_group.brake();
 	right_group.brake();
 
-	piston.set_value(true);
+	piston.set_value(true); //retrack
 
-	intake_group.move_relative(-90, 100);
+	intake_group.move_relative(-90, 100); //shut flood gate
 
-	pros::delay(500);
+	pros::delay(2000); // catch
 
-	intake_group.move_relative(90, 100);
+	intake_group.move_relative(90, 100); // open flood gate
 }
 
 void disabled() {}
@@ -190,31 +190,14 @@ void autonomous() {
 	
 	move(-5000, 40);
 	turn(3000, -85);
-	move(-5000, 6);
-	move(5000, 67);
-	turn(3000, -90);
-
-	// 100 Is Horizontal
-	intake_group.move_relative(90, 100); // Moves 100 units forward
-	// while (!((intake_group.get_positions().at(0) < 95) && (intake_group.get_positions().at(0) > 90))) {
-	// 	pros::delay(5);
-	// }
-
-	pros::delay(500);
-	piston.set_value(false);
-
-	move(-2000, 5);
-
-	left_group.move_voltage(10000);
-	right_group.move_voltage(10000);
-	pros::delay(500);
-	left_group.brake();
-	right_group.brake();
-	move(5000, 70);
+	
+	move(5000, 69);
 	turn(3000, -90);
 
 	piston.set_value(true);
-	for (int i = 0; i < 11; i++) {
+	intake_group.move_relative(-180, 200);
+	pros::delay(500);
+	for (int i = 0; i < 22; i++) {
 		pushPull();
 	}
 }
