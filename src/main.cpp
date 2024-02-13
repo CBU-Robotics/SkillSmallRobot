@@ -38,9 +38,6 @@ const double width = 10.375;
 //The diameter of the wheel
 const double diameter = 3.917;
 
-//The amount the left side needs to catch up to the right
-const double offset = 1.00;
-
 // Controller and motor setup
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 pros::Motor left_top_motor(LEFT_FRONT_WHEEL_PORT, pros::E_MOTOR_GEAR_200, false, pros::E_MOTOR_ENCODER_DEGREES);
@@ -115,38 +112,9 @@ void turn(int voltage, double rotation) {
 
 void initialize() {
 	//pros::lcd::initialize();
-	pros::ADIDigitalOut piston ('A', false);
+	pros::ADIDigitalOut piston ('A', true);
 	left_group.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
 	right_group.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
-}
-
-void punchIt() {
-	// intake_group.move_relative(-450, 200);
-	// pros::delay(1000);
-	move(-5000, 5);
-	int flag = true;
-
-	while (flag) {
-		piston.set_value(true);
-		pros::delay(1000);
-		flag = false;
-	}
-	// 1s
-	pros::delay(1000);
-
-	//move forward
-	left_group.move_voltage(5000);
-	right_group.move_voltage(5000);
-	pros::delay(1000);
-	left_group.brake();
-	right_group.brake();
-}
-
-void unPunchIt() {
-	turn(3000, 5); // Left shift adjust
-	move(-1000, 2);
-	piston.set_value(false);
-	// intake_group.move_relative(100, 200);
 }
 
 void pushPull() {
@@ -191,7 +159,7 @@ void autonomous() {
 	move(-5000, 40);
 	turn(3000, -85);
 	
-	move(5000, 69);
+	move(5000, 68);
 	turn(3000, -90);
 
 	piston.set_value(true);
