@@ -119,19 +119,20 @@ void initialize() {
 
 void pushPull() {
 	intake_group.move_relative(-990, 100);
-
-	pros::delay(500);
 	piston.set_value(false); //punch
 
+	//Back Up
 	move(-2000, 5);
 
-	left_group.move_voltage(10000);
-	right_group.move_voltage(10000);
+	// Ram
+	left_group.move_voltage(8000);
+	right_group.move_voltage(8000);
+	piston.set_value(true); //retrack
+
 	pros::delay(500);
 	left_group.brake();
 	right_group.brake();
 
-	piston.set_value(true); //retrack
 
 	intake_group.move_relative(-90, 100); //shut flood gate
 
@@ -149,6 +150,8 @@ void competition_initialize() {
 	}
 }
 
+// Small robot is allowed 1 preload and can catch an additional 22 triballs at maximum per the rules.
+// We are currently scoring up to 13 triballs.
 void autonomous() {
 	/**
 	 * Dimensions Note: 
@@ -156,10 +159,10 @@ void autonomous() {
 	 * Real dimensions are 14.5 x 13 inches.
 	 */
 	
-	move(-5000, 40);
+	move(-9500, 40); //-5000, 40
 	turn(3000, -85);
 	
-	move(5000, 68);
+	move(12000, 65); //5000 , 67
 	turn(3000, -90);
 
 	piston.set_value(true);
