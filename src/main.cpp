@@ -123,11 +123,11 @@ void pushPull() {
 
 	//Back Up
 	move(-3250, 4);
-	pros::delay(1250); // Catch
+	pros::delay(1400); // Catch
 
 	// Ram
-	left_group.move_voltage(12000);
-	right_group.move_voltage(12000);
+	left_group.move_voltage(10500);
+	right_group.move_voltage(10500);
 	piston.set_value(true); //retrack
 
 	pros::delay(500);
