@@ -118,27 +118,24 @@ void initialize() {
 }
 
 void pushPull() {
+	intake_group.move_relative(90, 100); // open flood gate
 	intake_group.move_relative(-990, 100);
-	piston.set_value(false); //punch
 
 	//Back Up
-	move(-2000, 5);
+	move(-3250, 4);
+	pros::delay(1250); // Catch
 
 	// Ram
-	left_group.move_voltage(8000);
-	right_group.move_voltage(8000);
+	left_group.move_voltage(12000);
+	right_group.move_voltage(12000);
 	piston.set_value(true); //retrack
 
 	pros::delay(500);
 	left_group.brake();
 	right_group.brake();
-
+	piston.set_value(false);
 
 	intake_group.move_relative(-90, 100); //shut flood gate
-
-	pros::delay(2000); // catch
-
-	intake_group.move_relative(90, 100); // open flood gate
 }
 
 void disabled() {}
@@ -159,16 +156,26 @@ void autonomous() {
 	 * Real dimensions are 14.5 x 13 inches.
 	 */
 	
-	move(-9500, 40); //-5000, 40
-	turn(3000, -85);
+	move(-10000, 38); //-5000, 40
+	turn(3000, -80);
 	
-	move(12000, 65); //5000 , 67
+	move(12000, 62); //5000 , 67
 	turn(3000, -90);
 
 	piston.set_value(true);
 	intake_group.move_relative(-180, 200);
 	pros::delay(500);
-	for (int i = 0; i < 22; i++) {
+	
+    piston.set_value(false);
+	left_group.move_voltage(10000);
+	right_group.move_voltage(10000);
+	piston.set_value(true); //retrack
+	pros::delay(500);
+	left_group.brake();
+	right_group.brake();
+	piston.set_value(false);
+
+	for (int i = 0; i < 30; i++) {
 		pushPull();
 	}
 }
