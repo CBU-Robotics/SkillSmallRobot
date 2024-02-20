@@ -159,10 +159,10 @@ void autonomous() {
 	 * Real dimensions are 14.5 x 13 inches.
 	 */
 	
-	move(-9500, 40); //-5000, 40
+	move(-5000, 40);
 	turn(3000, -85);
 	
-	move(12000, 65); //5000 , 67
+	move(5000, 67);
 	turn(3000, -90);
 
 	piston.set_value(true);
