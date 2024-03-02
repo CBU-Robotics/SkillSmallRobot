@@ -126,7 +126,7 @@ void pushPull() {
 	left_group.move_voltage(8000);
 	right_group.move_voltage(8000);
 	piston.set_value(true); //retrack
-	pros::delay(250);
+	pros::delay(500); //250ms was not enough time to reach the net. Change to 500ms
 	left_group.brake();
 	right_group.brake();
 	intake_group.move_relative(-90, 100); //shut flood gate
@@ -153,7 +153,7 @@ void autonomous() {
 	 */
 	
 	move(-9500, 40); //-5000, 40
-	turn(3000, -85);
+	turn(3000, -75);
 	move(12000, 65); //5000 , 67
 	turn(3000, -90);
 	piston.set_value(true);
@@ -201,10 +201,10 @@ void opcontrol() {
 
 		// Intake control
 		if (master.get_digital(DIGITAL_R1)) { // Intake
-			intake_group.move_voltage(MAX_VOLTAGE);
+			intake_group.move_voltage(6500);
 		}
 		else if (master.get_digital(DIGITAL_L1)) { // Release
-			intake_group.move_voltage(-MAX_VOLTAGE);
+			intake_group.move_voltage(-6500);
 		}
 		else {
 			//Potentially change to move to absolute position if button is not being pressed
