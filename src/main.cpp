@@ -1,11 +1,5 @@
 #include "main.h"
 
-/*
-* Dimensions Note: 
-* From center of wheel to center of wheel the robot is 10.5 x 10 & 3/8 inches.
-* Border dimensions are 14.5 x 13 inches.
-*/
-
 // Drivetrain motor ports
 const int LEFT_FRONT_WHEEL_PORT = 19;
 const int LEFT_MIDDLE_WHEEL_PORT = 20; // Solid/Tracking Wheel
@@ -15,7 +9,7 @@ const int RIGHT_MIDDLE_WHEEL_PORT = 11; // Solid/Tracking Wheel
 const int RIGHT_BACK_WHEEL_PORT = 13;
 
 // Intake motor ports
-const int LEFT_INTAKE_MOTOR_PORT = 10;
+const int LEFT_INTAKE_MOTOR_PORT = 9;
 const int RIGHT_INTAKE_MOTOR_PORT = 2;
 
 const int IMU_PORT = 3; // Inertial Measurement Unit
@@ -38,6 +32,9 @@ const double width = 10.375;
 //The diameter of the wheel
 const double diameter = 3.917;
 
+//The amount the left side needs to catch up to the right
+const double offset = 1.00;
+
 // Controller and motor setup
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 pros::Motor left_top_motor(LEFT_FRONT_WHEEL_PORT, pros::E_MOTOR_GEAR_200, false, pros::E_MOTOR_ENCODER_DEGREES);
@@ -46,8 +43,8 @@ pros::Motor left_bottom_motor(LEFT_BACK_WHEEL_PORT, pros::E_MOTOR_GEAR_200, fals
 pros::Motor right_top_motor(RIGHT_FRONT_WHEEL_PORT, pros::E_MOTOR_GEAR_200, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor right_middle_motor(RIGHT_MIDDLE_WHEEL_PORT, pros::E_MOTOR_GEAR_200, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor right_bottom_motor(RIGHT_BACK_WHEEL_PORT, pros::E_MOTOR_GEAR_200, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor left_intake_motor(LEFT_INTAKE_MOTOR_PORT, pros::E_MOTOR_GEAR_600, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor right_intake_motor(RIGHT_INTAKE_MOTOR_PORT, pros::E_MOTOR_GEAR_600, true, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor left_intake_motor(LEFT_INTAKE_MOTOR_PORT, pros::E_MOTOR_GEAR_200, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor right_intake_motor(RIGHT_INTAKE_MOTOR_PORT, pros::E_MOTOR_GEAR_200, true, pros::E_MOTOR_ENCODER_DEGREES);
 
 // Motor groups
 pros::Motor_Group left_group({ left_top_motor, left_middle_motor, left_bottom_motor });
@@ -60,6 +57,17 @@ pros::Imu imu_sensor(IMU_PORT);
 // Pneumatic Piston
 pros::ADIDigitalOut piston ('A');
 
+// Global timer
+double start_time;
+double current_time;
+
+void delay(int time) {
+  current_time = start_time;
+  while (current_time - start_time < time) {
+    current_time = pros::millis();
+  }
+  start_time += time;
+}
 
 double dabs(double v) {
 	return v < 0.0 ? -v : v;
@@ -77,7 +85,6 @@ void move(int voltage, double distance) {
 		left_group.move_voltage(voltage);
 		right_group.move_voltage(voltage);
 		v = left_middle_motor.get_position();
-		pros::lcd::print(0, "%f %f %f", iv, v, r);
 	}
 	left_group.brake();
 	right_group.brake();
@@ -126,11 +133,11 @@ void pushPull() {
 	left_group.move_voltage(8000);
 	right_group.move_voltage(8000);
 	piston.set_value(true); //retrack
-	pros::delay(500); //250ms was not enough time to reach the net. Change to 500ms
+	pros::delay(1250);
 	left_group.brake();
 	right_group.brake();
 	intake_group.move_relative(-90, 100); //shut flood gate
-	pros::delay(750); // catch
+	pros::delay(500); // catch
 	intake_group.move_relative(90, 100); // open flood gate
 }
 
@@ -146,12 +153,7 @@ void competition_initialize() {
 // Small robot is allowed 1 preload and can catch an additional 22 triballs at maximum per the rules.
 // We are currently scoring up to 13 triballs.
 void autonomous() {
-	/**
-	 * Dimensions Note: 
-	 * the robot's dimensions are about from center of wheel to center of wheel 10.5 x 10 and 3/8 inches.
-	 * Real dimensions are 14.5 x 13 inches.
-	 */
-	
+	start_time = pros::millis();
 	move(-9500, 40); //-5000, 40
 	turn(3000, -75);
 	move(12000, 65); //5000 , 67
@@ -219,6 +221,6 @@ void opcontrol() {
 			piston.set_value(false);
 		}
 
-		pros::delay(20); // Delay for loop iteration
+		pros::delay(20); // pros::delay for loop iteration
 	}
 }
