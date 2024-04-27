@@ -137,7 +137,7 @@ void pushPull() {
 	left_group.brake();
 	right_group.brake();
 	intake_group.move_relative(-90, 100); //shut flood gate
-	pros::delay(500); // catch
+	pros::delay(750); // was 500
 	intake_group.move_relative(90, 100); // open flood gate
 }
 
