@@ -154,8 +154,8 @@ void competition_initialize() {
 // We are currently scoring up to 13 triballs.
 void autonomous() {
 	start_time = pros::millis();
-	move(-9500, 40); //-5000, 40
-	turn(3000, -75);
+	move(-9500, 40.5); //-5000, 40
+	turn(3000, -77);
 	move(12000, 65); //5000 , 67
 	turn(3000, -90);
 	piston.set_value(true);
